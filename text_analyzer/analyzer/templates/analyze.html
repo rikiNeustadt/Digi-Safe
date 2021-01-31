@@ -1,0 +1,305 @@
+<!-- https://codepen.io/rexkirby/pen/Fdnlz -->
+
+<div id="form-main">
+    <div id="form-div">
+      <!-- <form class="form" id="form1" method="POST"> -->
+        
+        <!-- <p class="text">
+          <textarea name="text" dir="rtl" class="validate[required,length[6,300]] feedback-input" id="textBox" placeholder="הכנס טקסט"></textarea>
+        </p> -->
+
+        <div class="text">
+            <div class="form-group">
+                <label id="insertLl" dir="rtl">הכנס טקסט</label>
+                <textarea style="overflow:hidden" type="text" class="form-control feedback-input" maxlength="1000" required="required" id="textBox" dir="rtl"></textarea>
+                <small id="leftChar" class="form-text text-muted" dir="rtl">0 תווים נשארו</small>
+            </div>
+        </div>
+
+        
+        <div class="submit">
+            <button id="submitBtn">עיבוד</button>
+          <!-- <div class="ease"></div> -->
+        </div>
+
+
+        <div class="cleanMsg">
+            <div class="name">
+                <input name="name" dir="rtl" type="text" class="feedback-input result" placeholder="ניקוי הטקסט" id="clean" disabled/>
+            </div>
+        </div>
+
+        <div class="resultDiv">
+            <div class="name">
+                <input name="name" dir="rtl" type="text" class="feedback-input result" placeholder="סיווג הטקסט" id="result" disabled/>
+            </div>
+        </div>
+        
+      <!-- </form> -->
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<script>
+
+function markRequired() {
+    var control = $(this).children(".form-control");
+    var label = $(this).children("label");
+    if (control.attr("required") == "required") {
+        label.addClass("required");
+    }
+}
+
+function countCharacters() {
+    var max = $(this).attr("maxlength");
+    var length = $(this).val().length;
+    var counter = max - length;
+    var helper = $(this).next(".form-text");
+    // Switch to the singular if there's exactly 1 character remaining
+    if (counter !== 1) {
+        helper.text(counter + "  תווים נשארו");
+    } else {
+        helper.text(counter + "  תווים נשארו");
+    }
+    // Make it red if there are 0 characters remaining
+    if (counter === 0) {
+        helper.removeClass("text-muted");
+        helper.addClass("text-danger");
+    } else {
+        helper.removeClass("text-danger");
+        helper.addClass("text-muted");
+    }
+}
+
+$(document).ready(function () {
+    $(".form-group").each(markRequired);
+    $(".form-control").each(countCharacters);
+    $(".form-control").keyup(countCharacters);
+
+    $('#submitBtn').click(function(){
+        textBoxVal = $("#textBox").val();
+        console.log(textBoxVal);
+        if(!textBoxVal){
+            $("#result").val("");
+            $("#clean").val("");
+            return;
+        }
+            
+        console.log("submit clicked!");
+        jQuery.ajax({
+            type: "POST",
+            url: "{% url 'submit_text' %}",
+            data: {
+                'hebrew_text': textBoxVal,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            dataType: 'json',
+            success: function(res){
+                console.log(res);
+                $("#clean").val(res["clean_massage"]);
+                $("#result").val(res["prediction"] + " (" + res["probabilty"] + "%)");
+            },
+            error: function(res){
+                console.log(res);
+                alert("error!");
+            }
+        })
+    });
+});
+</script>
+
+
+<style>
+* {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+html{background:url('static/background.png') no-repeat;
+background-size: cover;
+height:100%;
+}
+
+#feedback-page{
+text-align:center;
+}
+
+#form-main{
+width:100%;
+float:left;
+padding-top:0px;
+}
+
+#form-div {
+/* opacity: 40%; */
+background-color:rgba(73, 71, 71, 0.4);
+padding-left:35px;
+padding-right:35px;
+padding-top:20px;
+padding-bottom:50px;
+width: 600px;
+float: left;
+left: 45%;
+position: absolute;
+margin-top:30px;
+margin-left: -260px;
+-moz-border-radius: 7px;
+-webkit-border-radius: 7px;
+margin-top: 10rem;
+}
+
+.feedback-input {
+color:#3c3c3c;
+
+font-weight:500;
+font-size: 18px;
+border-radius: 0;
+line-height: 22px;
+background-color: #fbfbfb;
+padding: 13px 13px 13px 54px;
+margin-bottom: 10px;
+width:100%;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+-ms-box-sizing: border-box;
+box-sizing: border-box;
+border: 3px solid rgba(0,0,0,0);
+}
+
+.feedback-input:focus{
+background: #fff;
+box-shadow: 0;
+border: 3px solid #3498db;
+color: #3498db;
+outline: none;
+padding: 13px 13px 13px 54px;
+}
+
+.focused{
+color:#30aed6;
+border:#30aed6 solid 3px;
+}
+
+/* Icons ---------------------------------- */
+/* #name{
+background-image: url(http://rexkirby.com/kirbyandson/images/name.svg);
+background-size: 30px 30px;
+background-position: 11px 8px;
+background-repeat: no-repeat;
+} */
+/* 
+#name:focus{
+background-image: url(http://rexkirby.com/kirbyandson/images/name.svg);
+background-size: 30px 30px;
+background-position: 8px 5px;
+background-position: 11px 8px;
+background-repeat: no-repeat;
+} */
+
+#textBox{
+background-image: url(http://rexkirby.com/kirbyandson/images/comment.svg);
+background-size: 30px 30px;
+background-position: 11px 8px;
+background-repeat: no-repeat;
+width: 100%;
+height: 150px;
+line-height: 150%;
+resize:vertical;
+padding: 20 20px 200px;
+}
+
+textarea {
+width: 100%;
+height: 150px;
+line-height: 150%;
+resize:vertical;
+}
+
+input:hover, textarea:hover,
+input:focus, textarea:focus {
+background-color:white;
+}
+
+#submitBtn{
+font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+float:left;
+width: 100%;
+border: #fbfbfb solid 4px;
+cursor:pointer;
+background-color: #3498db;
+color:white;
+font-size:24px;
+padding-top:22px;
+padding-bottom:22px;
+-webkit-transition: all 0.3s;
+-moz-transition: all 0.3s;
+transition: all 0.3s;
+margin-top:-4px;
+font-weight:700;
+margin-bottom: 1rem;
+}
+
+#submitBtn:hover{
+background-color: rgba(0,0,0,0);
+}
+
+.submit:hover {
+color: #3498db;
+}
+
+.ease {
+width: 0px;
+height: 74px;
+background-color: #fbfbfb;
+-webkit-transition: .3s ease;
+-moz-transition: .3s ease;
+-o-transition: .3s ease;
+-ms-transition: .3s ease;
+transition: .3s ease;
+}
+
+.submit:hover .ease{
+width:100%;
+background-color:white;
+}
+
+@media only screen and (max-width: 580px) {
+#form-div{
+    left: 3%;
+    margin-right: 3%;
+    width: 88%;
+    margin-left: 0;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+}
+
+label, small {
+    float: right;
+    font-weight:bold;
+    color: white;
+}
+label {
+    font-size: larger;
+}
+small {
+    color: #072250;
+}
+label.required::after {
+    color: #ff0000;
+    content: " *"
+}
+#leftChar, #insertLl{
+    margin-bottom: 1rem;
+}
+
+textarea {
+    min-height: 38px;
+}
+/* .result {
+    margin-top: 1rem;
+} */
+</style>
