@@ -3,8 +3,12 @@ import pickle
 import sys
 import time
 
-model_path = "/home/riki/Study/Project/TextAnalyzer/text_analyzer/backend/finalized_model_svc.sav"
+# model_path = "/home/riki/Study/Project/Demo/Digi-Safe/text_analyzer/backend/finalized_model_svc.sav"
 # model_path = "/home/riki/Study/Project/TextAnalyzer/text_analyzer/backend/finalized_model.sav"
+# model_path = "/home/riki/Study/Project/Demo/Digi-Safe/text_analyzer/backend/svm_model_recall.sav"
+model_path = "/home/riki/Study/Project/Demo/Digi-Safe/text_analyzer/backend/nb_model_recall.sav"
+
+
 
 prediction_dict = {
     0: "חריג",
@@ -20,16 +24,20 @@ class ParserModel(object):
         self.probabilty = None
         self.model = pickle.load(open(model_path, 'rb'))
         self.clean_data()
-        self.get_prediction()
+        # self.get_prediction()
         self.get_probabilty()
+        # self.clean_massage = "אין אתה חבר התאבד עכשיו חרא חרא"
 
     def clean_data(self):
         tc_functions_lst = [
             "rm_hashtags",
             "rm_punctuation",
             "rm_multiple_chars",
-            "rm_stop_words",
             "convert_emojis",
+            "spell_corecction",
+            "get_stemming",
+            "rm_stop_words",
+            "rm_short_words",
             "rm_unicode_non_char",
             "rm_white_spaces"
         ]
@@ -45,11 +53,11 @@ class ParserModel(object):
         
 
     def get_prediction(self):
-        # start = time.time()
-        # print(self.model.predict([self.clean_massage]))
-        # self.numeric_prediction = self.model.predict([self.clean_massage])[0]
-        # self.prediction = prediction_dict[self.numeric_prediction]
-        # print(f"function: get_prediction, period: {time.time()-start}")
+        start = time.time()
+        print(self.model.predict([self.clean_massage]))
+        self.numeric_prediction = self.model.predict([self.clean_massage])[0]
+        self.prediction = prediction_dict[self.numeric_prediction]
+        print(f"function: get_prediction, period: {time.time()-start}")
         pass
 
     def get_probabilty(self):
