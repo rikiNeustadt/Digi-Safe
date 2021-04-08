@@ -36,8 +36,10 @@ It is running on local Django server.
 
 
 ## Tools In used
-Google Search API ![alt-text](https://serpapi.com/)
-Hebrew Parser ![alt-text](https://www.langndata.com/heb_parser/demo)
+
+[Google Search API](https://serpapi.com/)
+
+[Hebrew Parser](https://www.langndata.com/heb_parser/demo)
 
 
  ![alt-text](https://github.com/rikiNeustadt/Digi-Safe/blob/master/Demo.gif)
