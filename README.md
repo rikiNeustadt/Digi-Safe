@@ -5,6 +5,9 @@ This tool is an NLP project in Hebrew.
 
 It is running on local Django server.
 
+ ![alt-text](https://github.com/rikiNeustadt/Digi-Safe/blob/master/Demo.gif)
+
+
 ## Requirements
 
 * Python 3.6 and above.
@@ -44,4 +47,4 @@ It is running on local Django server.
 [Hebrew Parser](https://www.langndata.com/heb_parser/demo)
 
 
- ![alt-text](https://github.com/rikiNeustadt/Digi-Safe/blob/master/Demo.gif)
+
