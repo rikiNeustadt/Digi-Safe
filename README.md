@@ -1,6 +1,8 @@
 # NLP Hebrew Analyzer Demo 
 Development of a computational tool for identifying unusual discourse of children
+
 This tool is an NLP project in Hebrew.
+
 It is running on local Django server.
 
 ## Requirements
