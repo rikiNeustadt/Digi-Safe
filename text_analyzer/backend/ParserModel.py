@@ -3,12 +3,7 @@ import pickle
 import sys
 import time
 
-# model_path = "/home/riki/Study/Project/Demo/Digi-Safe/text_analyzer/backend/finalized_model_svc.sav"
-# model_path = "/home/riki/Study/Project/TextAnalyzer/text_analyzer/backend/finalized_model.sav"
-# model_path = "/home/riki/Study/Project/Demo/Digi-Safe/text_analyzer/backend/svm_model_recall.sav"
-model_path = "/home/riki/Study/Project/Demo/Digi-Safe/text_analyzer/backend/nb_model_recall.sav"
-
-
+model_path = "model.sav"
 
 prediction_dict = {
     0: "חריג",
@@ -24,9 +19,7 @@ class ParserModel(object):
         self.probabilty = None
         self.model = pickle.load(open(model_path, 'rb'))
         self.clean_data()
-        # self.get_prediction()
         self.get_probabilty()
-        # self.clean_massage = "אין אתה חבר התאבד עכשיו חרא חרא"
 
     def clean_data(self):
         tc_functions_lst = [
@@ -45,20 +38,6 @@ class ParserModel(object):
             start = time.time()
             method_to_call = getattr(TextCleaning, tc_function)
             self.clean_massage = method_to_call(self.clean_massage)
-            print("---------------------------")
-            print(self.clean_massage)
-            print(f"function: {tc_function}, period: {time.time()-start}")
-            print("---------------------------")
-
-        
-
-    def get_prediction(self):
-        start = time.time()
-        print(self.model.predict([self.clean_massage]))
-        self.numeric_prediction = self.model.predict([self.clean_massage])[0]
-        self.prediction = prediction_dict[self.numeric_prediction]
-        print(f"function: get_prediction, period: {time.time()-start}")
-        pass
 
     def get_probabilty(self):
         proba = self.model.predict_proba([self.clean_massage])[0]
