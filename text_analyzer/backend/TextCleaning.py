@@ -7,8 +7,8 @@ from langdetect import detect
 from string import punctuation
 from typing import List
 from serpapi import GoogleSearch
-YAP_TOKEN = "28930fd791ebaa47eb2e1f86682f7a46"
-SPELL_TOKEN = "8f004f2885a2e9ad764d287712605450104752cbf262bc9d6ea44123e6254214"
+YAP_TOKEN = "YOUR YAP API TOKEN"
+SPELL_TOKEN = "YOUR GOOGLE API TOKEN"
 VALID_REQUEST = "200"
 
 most_common_emoji = {
@@ -65,13 +65,6 @@ def get_stemming(text: str) -> str:
         _json='{"data":"'+text+'"}'  
         headers = {'content-type': 'application/json'}
         response = requests.post(url,  data=_json.encode('utf-8'), headers={'Content-type': 'application/json; charset=utf-8'})
-        # print( r.json())
-        # return text
-        # response = requests.get(url_path)
-        # print("\n\n\n\n")
-        # print(response)
-        # print("\n\n\n\n")
-        # print(response.status_code)
         final_stemming = response.json()
         if final_stemming:
             return final_stemming["lemmas"]
@@ -98,21 +91,16 @@ def spell_corecction(text: str) -> str:
         words_lst = text.split()
         print(words_lst)
         for index, word in enumerate(words_lst):
-            print(f"\n{index}, {word}")
             params["q"] = word
-            print("params")
-            print(params)
             search = GoogleSearch(params)
             results = search.get_dict()
             search_information = results.get('search_information')
             if search_information:
                 fixed_word = search_information.get("spelling_fix")
-                print(f"spelling_fix {fixed_word}")
                 if fixed_word:
                     words_lst[index] = fixed_word
         return ' '.join(word for word in words_lst)
     except BaseException as err:
-        print(err)
         return text
 
 def rm_emoji(text: str, replace: bool = False) -> str:
