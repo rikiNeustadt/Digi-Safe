@@ -1,6 +1,6 @@
 emoji==0.6.0
 emot==2.1
-Django==3.1.5
+Django==3.1.12
 sklearn==0.0
 langdetect==1.0.8
 google-search-results
